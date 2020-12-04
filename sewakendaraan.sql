@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 24, 2020 at 01:03 PM
+-- Generation Time: Dec 04, 2020 at 09:49 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -34,6 +34,18 @@ CREATE TABLE `penyewa` (
   `noHp` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `penyewa`
+--
+
+INSERT INTO `penyewa` (`nama`, `noKtp`, `alamat`, `noHp`) VALUES
+('Miqdad', '24873483743', 'Bandung', '08982376482'),
+('Baihaqi Suhaeri', '3284738743', 'jakarta', '083898017587'),
+('Baihaqi Suhaeri', '38473843', 'jakarta', '0838398017587'),
+('Amar', '384738473', 'Lenteng', '08787865453'),
+('Baihaqi Suhaeri', '834738743', 'Jakarta', '083898017587'),
+('Baihaqi Suhaeri', '8374834793', 'Jakarta', '08398017587');
+
 -- --------------------------------------------------------
 
 --
@@ -46,8 +58,18 @@ CREATE TABLE `transaksi` (
   `noKtp` char(20) NOT NULL,
   `namaKendaraan` varchar(128) NOT NULL,
   `durasiSewa` int(20) NOT NULL,
-  `hargaSewa` int(20) NOT NULL
+  `hargaSewa` int(20) NOT NULL,
+  `tanggalSewa` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `transaksi`
+--
+
+INSERT INTO `transaksi` (`kodeTf`, `nama`, `noKtp`, `namaKendaraan`, `durasiSewa`, `hargaSewa`, `tanggalSewa`) VALUES
+('24873376482', 'Miqdad', '24873483743', 'Mobil Avanza', 2, 1000000, '2020-10-10'),
+('3847865453', 'Amar', '384738473', 'Motor Beat', 4, 680000, '2020-12-21'),
+('83748017587', 'Baihaqi Suhaeri', '8374834793', 'Mobil Avanza', 3, 1500000, '2020-08-02');
 
 --
 -- Indexes for dumped tables
