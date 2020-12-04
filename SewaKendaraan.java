@@ -4,7 +4,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.DatabaseMetaData;
 
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class SewaKendaraan{
@@ -48,7 +55,16 @@ try{
  	 String alamat;
  	 String noHp;
  	 String kodeTf;
-	
+	 String inputTf;
+	 String tanggal;
+	 int denda = 5000;
+	 int totalDenda;
+	 int hasilDurasi;
+	 int bayarDenda;
+
+	 String stglAwal;
+     String stglAkhir;
+
 	 System.out.println("Selamat Datang Di Apilikasi Sewa Kendaraan Kelompok 1");
 	 System.out.println("-------------------------------------");
 	 System.out.println("Masukan Pilihan Anda");
@@ -103,6 +119,8 @@ try{
 	 			noHp = masukan.nextLine();
 	 			System.out.print("Masukan durasi (Hari) sewa yang anda inginkan : ");
 	 			durasiSewa = masukan.nextInt();
+	 			System.out.print("Masukan tanggal sewa : ");
+	 			tanggal = masukan.next();
 	 			System.out.println();
 	 			akumulasiHarga = durasiSewa * mobil[pilihMobil-1].getHarga();
 	 			mobilDipilih = mobil[pilihMobil-1].getMerekMobil();
@@ -132,16 +150,22 @@ try{
 
 
 	 					try{
-	 						tambahTransaksi = connection.prepareStatement("INSERT INTO transaksi (kodeTf, nama, noKtp, namaKendaraan, durasiSewa, hargaSewa)" +" VALUES (?, ?, ?, ?, ?, ?) ");
+	 						tambahTransaksi = connection.prepareStatement("INSERT INTO transaksi (kodeTf, nama, noKtp, namaKendaraan, durasiSewa, hargaSewa, tanggalSewa)" +" VALUES (?, ?, ?, ?, ?, ?, ?) ");
 							tambahTransaksi.setString(1,kodeTf);
 							tambahTransaksi.setString(2,nama);
 							tambahTransaksi.setString(3, noKtp);
 							tambahTransaksi.setString(4, "Mobil " + mobilDipilih);
 							tambahTransaksi.setInt(5, durasiSewa);
 							tambahTransaksi.setInt(6, akumulasiHarga);
+
+							DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+							Date fd = formatter.parse(tanggal);
+							java.sql.Date sqlDate = new java.sql.Date(fd.getTime());
+							tambahTransaksi.setDate(7, sqlDate);
+
 							int result = tambahTransaksi.executeUpdate();
 
-	 				}catch(SQLException e){
+	 				}catch(Exception e){
 	 					e.printStackTrace();
 	 				}
 
@@ -217,6 +241,8 @@ try{
 	 			noHp = masukan.nextLine();
 	 			System.out.print("Masukan durasi (Hari) sewa yang anda inginkan : ");
 	 			durasiSewa = masukan.nextInt();
+	 			System.out.print("Masukan tanggal sewa : ");
+	 			tanggal = masukan.next();
 	 			System.out.println();
 	 			akumulasiHarga = durasiSewa * motor[pilihMotor-1].getHarga();
 	 			motorDipilih = motor[pilihMotor-1].getMerekMotor();
@@ -246,16 +272,20 @@ try{
 
 
 	 					try{
-	 						tambahTransaksi = connection.prepareStatement("INSERT INTO transaksi (kodeTf, nama, noKtp, namaKendaraan, durasiSewa, hargaSewa)" +" VALUES (?, ?, ?, ?, ?, ?) ");
+	 						tambahTransaksi = connection.prepareStatement("INSERT INTO transaksi (kodeTf, nama, noKtp, namaKendaraan, durasiSewa, hargaSewa, tanggalSewa)" +" VALUES (?, ?, ?, ?, ?, ?, ?) ");
 							tambahTransaksi.setString(1,kodeTf);
 							tambahTransaksi.setString(2,nama);
 							tambahTransaksi.setString(3, noKtp);
 							tambahTransaksi.setString(4, "Motor " + motorDipilih);
 							tambahTransaksi.setInt(5, durasiSewa);
 							tambahTransaksi.setInt(6, akumulasiHarga);
+							DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+							Date fd = formatter.parse(tanggal);
+							java.sql.Date sqlDate = new java.sql.Date(fd.getTime());
+							tambahTransaksi.setDate(7, sqlDate);
 							int result = tambahTransaksi.executeUpdate();
 
-	 				}catch(SQLException e){
+	 				}catch(Exception e){
 	 					e.printStackTrace();
 	 				}
 
@@ -308,14 +338,100 @@ try{
 
 	 }
 	 //pengembalian
-	 else if(pilihan1==2){
 
+	 else if(pilihan1==2){
+	 	System.out.print("Masukan kode transaksi anda : ");
+	 	inputTf = masukan.next();
+	 	System.out.print("Masukan tanggal pengembalian : ");
+	 	stglAkhir = masukan.next();
+	 	try{
+	 	PreparedStatement stmt = connection.prepareStatement("select * from transaksi where kodeTf= '"+inputTf+"'");  
+		ResultSet rs = stmt.executeQuery();
+		DatabaseMetaData md = connection.getMetaData();
+		ResultSet rs2 = md.getColumns(null, null, "transaksi", "kodeTf");
+	if (rs2.next()) {
+      //Column in table exist
+		System.out.println("Maaf transaksi yang anda cari tidak ada atau mungkin anda belum menyewa kendaraan kami.");
+    	}else{
+    	}
+		  while(rs.next()){
+		  	System.out.println();
+		  	System.out.println("=====Detail transaksi=====");
+			System.out.println("Kode Transaksi : "+rs.getString(1));
+			System.out.println("Nama Penyewa : "+rs.getString(2));
+			System.out.println("Nomor KTP Penyewa : "+rs.getString(3));
+			System.out.println("Nama Kendaraan : "+rs.getString(4));
+			System.out.println("Durasi Sewa : "+rs.getInt(5));
+			hasilDurasi = rs.getInt(5);
+			System.out.println("Harga Sewa : " +rs.getInt(6));
+			System.out.println("Tanggal Sewa : "+ rs.getDate(7));
+			System.out.println("Tanggal Sewa : "+ stglAkhir);
+
+			Date date = rs.getDate(7);  
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+            stglAwal = dateFormat.format(date); 
+            
+
+            DateFormat dateAwal = new SimpleDateFormat("yyyy-mm-dd");
+        DateFormat dateAkhir = new SimpleDateFormat("yyyy-mm-dd");
+
+             Date tglAwal = dateAwal.parse(stglAwal);
+            Date tglAkhir = dateAkhir.parse(stglAkhir);
+            
+            Date TGLAwal = tglAwal;
+            Date TGLAkhir = tglAkhir;
+            Calendar cal1 = Calendar.getInstance();
+            cal1.setTime(TGLAwal);
+            Calendar cal2 = Calendar.getInstance();
+            cal2.setTime(TGLAkhir);
+            
+            String hasil = String.valueOf(daysBetween(cal1, cal2));
+            
+            if(Integer.parseInt(hasil)>hasilDurasi){
+            	System.out.println();
+            	System.out.println("Maaf anda telah melewati batas peminjaman, mohon untuk membayar dendanya!");
+
+            	System.out.println("Harga Denda/Hari : Rp." + denda);
+            	System.out.println("Denda yang harus dibayarkan : Rp." + denda*(Integer.parseInt(hasil)-hasilDurasi));
+            	totalDenda = denda*(Integer.parseInt(hasil)-hasilDurasi);
+            	System.out.print("Masukan uang untuk membayar denda : ");
+            	bayarDenda = masukan.nextInt();
+            	while(bayarDenda<totalDenda){
+            		System.out.println("Jangan kabur, uang yang dimasukan tidak cukup, bayar dendanya dulu!!!");
+            		System.out.print("Masukan uang untuk membayar denda : ");
+            		bayarDenda = masukan.nextInt();
+            		if(bayarDenda>=totalDenda){
+            			System.out.println("Denda sudah dibayar");
+            		}
+            	}
+
+            }
+
+
+			System.out.println("=====Terima Kasih Telah Mengembalikan Kendaraan=====");  
+			
+			}
+			System.exit(0);
+		}catch(Exception e){
+			e.printStackTrace();
+	 	}
 	 }
 	
 }
 
 
 	}
+
+
+private static long daysBetween(Calendar tanggalAwal, Calendar tanggalAkhir) {
+        long lama = 0;
+        Calendar tanggal = (Calendar) tanggalAwal.clone();
+        while (tanggal.before(tanggalAkhir)) {
+            tanggal.add(Calendar.DAY_OF_MONTH, 1);
+            lama++;
+        }
+        return lama;
+    }
 
 
 public static void addAuthor(String nama, String noKtp, String alamat, String noHp){
