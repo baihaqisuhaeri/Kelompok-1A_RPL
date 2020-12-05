@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
-
-
+import java.time.*;
+import java.time.format.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -113,14 +113,34 @@ try{
 	 			nama = masukan.nextLine();
 	 			System.out.print("Masukan nomor KTP : ");
 	 			noKtp = masukan.nextLine();
+	 			if(!noKtp.matches("(^\\d+${16})")){
+	 				System.out.println("Nomor KTP harus angka 16 digit");
+	 				System.out.print("Masukan nomor KTP : ");
+	 				noKtp = masukan.nextLine();
+	 			}
 	 			System.out.print("Masukan alamat anda : ");
 	 			alamat = masukan.nextLine();
 	 			System.out.print("Masukan nomor handphone anda : ");
 	 			noHp = masukan.nextLine();
+	 			if(!noHp.matches("(^\\d+${10,13})")){
+	 				System.out.println("Nomor handphone harus angka 10-13 digit");
+	 				System.out.print("Masukan nomor handphone anda : ");
+	 				noHp = masukan.nextLine();
+	 			}
 	 			System.out.print("Masukan durasi (Hari) sewa yang anda inginkan : ");
 	 			durasiSewa = masukan.nextInt();
+	 			if(durasiSewa < 1 || !("" + durasiSewa).matches("(^\\d+$)")){
+	 				System.out.print("Masukan durasi (Hari) sewa yang anda inginkan : ");
+	 				durasiSewa = masukan.nextInt();
+	 			}
 	 			System.out.print("Masukan tanggal sewa : ");
 	 			tanggal = masukan.next();
+	 			boolean cekFormatTgl = validateDate(tanggal);
+	 			if(cekFormatTgl == false){
+	 				System.out.print("Masukan tanggal sewa : ");
+	 				tanggal = masukan.next();
+	 				cekFormatTgl = validateDate(tanggal);
+	 			}
 	 			System.out.println();
 	 			akumulasiHarga = durasiSewa * mobil[pilihMobil-1].getHarga();
 	 			mobilDipilih = mobil[pilihMobil-1].getMerekMobil();
@@ -235,14 +255,34 @@ try{
 	 			nama = masukan.nextLine();
 	 			System.out.print("Masukan nomor KTP : ");
 	 			noKtp = masukan.nextLine();
+	 			if(!noKtp.matches("(^\\d+${16})")){
+	 				System.out.println("Nomor KTP harus angka 16 digit");
+	 				System.out.print("Masukan nomor KTP : ");
+	 				noKtp = masukan.nextLine();
+	 			}
 	 			System.out.print("Masukan alamat anda : ");
 	 			alamat = masukan.nextLine();
 	 			System.out.print("Masukan nomor handphone anda : ");
 	 			noHp = masukan.nextLine();
+	 			if(!noHp.matches("(^\\d+${10,13})")){
+	 				System.out.println("Nomor handphone harus angka 10-13 digit");
+	 				System.out.print("Masukan nomor handphone anda : ");
+	 				noHp = masukan.nextLine();
+	 			}
 	 			System.out.print("Masukan durasi (Hari) sewa yang anda inginkan : ");
 	 			durasiSewa = masukan.nextInt();
+	 			if(durasiSewa < 1 || !("" + durasiSewa).matches("(^\\d+$)")){
+	 				System.out.print("Masukan durasi (Hari) sewa yang anda inginkan : ");
+	 				durasiSewa = masukan.nextInt();
+	 			}
 	 			System.out.print("Masukan tanggal sewa : ");
 	 			tanggal = masukan.next();
+	 			boolean cekFormatTgl = validateDate(tanggal);
+	 			if(cekFormatTgl == false){
+	 				System.out.print("Masukan tanggal sewa : ");
+	 				tanggal = masukan.next();
+	 				cekFormatTgl = validateDate(tanggal);
+	 			}
 	 			System.out.println();
 	 			akumulasiHarga = durasiSewa * motor[pilihMotor-1].getHarga();
 	 			motorDipilih = motor[pilihMotor-1].getMerekMotor();
@@ -447,7 +487,17 @@ public static void addAuthor(String nama, String noKtp, String alamat, String no
 }
 
 
-
+public static boolean validateDate(String strDate){
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	sdf.setLenient(false);
+	try {
+		Date tgl = sdf.parse(strDate);
+	    return true;
+	} catch (ParseException e) {
+	    System.out.println("Format tanggal harus yyyy-MM-dd");
+	    return false;
+	}
+}
 
 
 }
