@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.DatabaseMetaData;
 import java.time.*;
 import java.time.format.*;
@@ -12,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 
 public class SewaKendaraan{
@@ -25,7 +27,7 @@ public class SewaKendaraan{
 
 
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws SQLException, ParseException{
 		 Scanner masukan = new Scanner(System.in);
 		
 		Mobil avanza = new Mobil("Avanza", "Putih", 6, 500000);
@@ -60,7 +62,7 @@ try{
 	 int denda = 5000;
 	 int totalDenda;
 	 int hasilDurasi;
-	 int bayarDenda;
+	 String bayarDenda;
 
 	 String stglAwal;
      String stglAkhir;
@@ -72,24 +74,46 @@ try{
 	 System.out.println("2. Pengembalian Kendaraan");
 	 System.out.print("Pilih : ");
 	 int kendaraan;
-	 int uang;
+	 String uang;
 	 String mobilDipilih;
 	 String motorDipilih;
 	 int akumulasiHarga;
-	 int yakinSewa2;
-	 int durasiSewa;
-	 int pilihMobil;
-	 int pilihMotor;
-	 int pilihanSewa;
-	 int yakinSewa;
-	 int pilihan1 = masukan.nextInt();
-	 if(pilihan1==1){
+	 String yakinSewa2;
+	 String durasiSewa;
+	 String pilihMobil;
+	 String pilihMotor;
+	 String pilihanSewa;
+	 String yakinSewa;
+	 String pilihan1 = masukan.next();
+	 if(!Pattern.compile("^[0-9]+$").matcher(String.valueOf(pilihan1)).matches()) {
+		 System.out.println("Masukan harus berupa angka positif!");
+		 System.out.println();
+	 }
+	 else if(pilihan1.equals("1")){
 	 	System.out.println("Pilih kendaraan yang ingin anda sewa");
 	 	System.out.println("1. Mobil");
 	 	System.out.println("2. Motor");
 	 	System.out.print("Pilih : ");
-	 	pilihanSewa = masukan.nextInt();
-	 	if(pilihanSewa==1){
+	 	pilihanSewa = masukan.next();
+	 	while(cekAngka(pilihanSewa)) {
+	 		System.out.println("Masukan harus berupa angka positif");
+	 		System.out.println();
+	 		System.out.println("Pilih kendaraan yang ingin anda sewa");
+		 	System.out.println("1. Mobil");
+		 	System.out.println("2. Motor");
+		 	System.out.print("Pilih : ");
+		 	pilihanSewa = masukan.next();
+	 	}
+	 	while(!Pattern.compile("^[1-2]$").matcher(pilihanSewa).matches()) {
+	 		System.out.println("Kendaraan tidak tersedia, mohon pilih kendaraan yang tersedia.");
+	 		System.out.println();
+	 		System.out.println("Pilih kendaraan yang ingin anda sewa");
+		 	System.out.println("1. Mobil");
+		 	System.out.println("2. Motor");
+		 	System.out.print("Pilih : ");
+		 	pilihanSewa = masukan.next();
+	 	}
+	 	if(pilihanSewa.equals("1")){
 	 		System.out.println("Pilih jenis Mobil yang ingin anda sewa");
 	 		for(int i=0; i<mobil.length; i++){
 	 			System.out.println(i+1 + ". " + mobil[i].getMerekMobil());
@@ -98,62 +122,123 @@ try{
 	 			System.out.println("   Harga : " + mobil[i].getHarga());
 	 			System.out.println();
 	 		}
-	 		System.out.print("Pilih : ");
-	 		pilihMobil = masukan.nextInt();
+	 		System.out.print("Pilih Mobil : ");
+	 		pilihMobil = masukan.next();
+	 		while(cekAngka(pilihMobil)) {
+	 			System.out.println("Masukan harus berupa angka positif!");
+	 			System.out.print("Pilih Mobil : ");
+		 		pilihMobil = masukan.next();
+	 		}
+	 		while(!Pattern.compile("^[1-4]$").matcher(pilihMobil).matches()) {
+	 			System.out.println("Maaf jenis mobil tidak tersedia");
+	 			System.out.print("Pilih Mobil : ");
+		 		pilihMobil = masukan.next();
+	 		}
 	 		System.out.println("Sewa mobil yang dipilih?");
 	 		System.out.println("1. Ya");
 	 		System.out.println("2. Tidak");
 	 		System.out.println("3. Keluar");
 	 		System.out.print("Pilih : ");
-	 		yakinSewa = masukan.nextInt();
-	 		if(yakinSewa==1){
+	 		yakinSewa = masukan.next();
+	 		while(cekAngka(yakinSewa)) {
+	 			System.out.println("Masukan harus berupa angka positif!");
+	 			System.out.print("Pilih : ");
+		 		yakinSewa = masukan.next();
+	 		}
+	 		while(!Pattern.compile("^[1-3]$").matcher(yakinSewa).matches()) {
+	 			System.out.println("Menu yang dipilih tidak tersedia, mohon pilih menu yang tersedia.");
+	 			System.out.print("Pilih : ");
+		 		yakinSewa = masukan.next();
+	 		}
+	 		
+	 		
+	 		if(yakinSewa.equals("1")){
 	 			System.out.println("Masukan data diri anda");
 	 			System.out.print("Nama : ");
 	 			nama = masukan.nextLine();
 	 			nama = masukan.nextLine();
+	 			while(cekHuruf(nama)) {
+	 				System.out.println("Nama harus berupa huruf!");
+	 				System.out.println();
+	 				System.out.println("Masukan data diri anda");
+		 			System.out.print("Nama : ");
+		 			nama = masukan.nextLine();
+	 			}
 	 			System.out.print("Masukan nomor KTP : ");
 	 			noKtp = masukan.nextLine();
 	 			if(!noKtp.matches("(^\\d+${16})")){
 	 				System.out.println("Nomor KTP harus angka 16 digit");
+	 				System.out.println();
+	 				System.out.print("Masukan nomor KTP : ");
+	 				noKtp = masukan.nextLine();
+	 			}
+	 			while(!Pattern.compile("^\\d{16}$").matcher(noKtp).matches()) {
+	 				System.out.println("Nomor KTP harus angka 16 digit");
+	 				System.out.println();
 	 				System.out.print("Masukan nomor KTP : ");
 	 				noKtp = masukan.nextLine();
 	 			}
 	 			System.out.print("Masukan alamat anda : ");
 	 			alamat = masukan.nextLine();
+	 			while(cekHuruf(alamat)) {
+	 				System.out.println("Alamat harus berupa huruf");
+	 				System.out.println();
+	 				System.out.print("Masukan alamat anda : ");
+		 			alamat = masukan.nextLine();
+		 			
+	 			}
 	 			System.out.print("Masukan nomor handphone anda : ");
+	 			
 	 			noHp = masukan.nextLine();
-	 			if(!noHp.matches("(^\\d+${10,13})")){
+	 			while(!Pattern.compile("^\\d{10,13}$").matcher(noHp).matches()){
 	 				System.out.println("Nomor handphone harus angka 10-13 digit");
 	 				System.out.print("Masukan nomor handphone anda : ");
 	 				noHp = masukan.nextLine();
 	 			}
 	 			System.out.print("Masukan durasi (Hari) sewa yang anda inginkan : ");
-	 			durasiSewa = masukan.nextInt();
-	 			if(durasiSewa < 1 || !("" + durasiSewa).matches("(^\\d+$)")){
+	 			durasiSewa = masukan.next();
+	 			while(cekAngka(durasiSewa) || Integer.parseInt(durasiSewa)<1) {
+	 				System.out.println("Durasi harus berupa bilangan positif");
 	 				System.out.print("Masukan durasi (Hari) sewa yang anda inginkan : ");
-	 				durasiSewa = masukan.nextInt();
+		 			durasiSewa = masukan.next();
 	 			}
+	 			
 	 			System.out.print("Masukan tanggal sewa : ");
 	 			tanggal = masukan.next();
 	 			boolean cekFormatTgl = validateDate(tanggal);
-	 			if(cekFormatTgl == false){
+	 			while(cekFormatTgl == false){
 	 				System.out.print("Masukan tanggal sewa : ");
 	 				tanggal = masukan.next();
 	 				cekFormatTgl = validateDate(tanggal);
 	 			}
 	 			System.out.println();
-	 			akumulasiHarga = durasiSewa * mobil[pilihMobil-1].getHarga();
-	 			mobilDipilih = mobil[pilihMobil-1].getMerekMobil();
-	 			System.out.println("Harga sewa mobil " + mobil[pilihMobil-1].getMerekMobil() +" untuk " + durasiSewa + " hari adalah Rp." + akumulasiHarga);
+	 			akumulasiHarga = Integer.parseInt(durasiSewa) * mobil[Integer.parseInt(pilihMobil)-1].getHarga();
+	 			mobilDipilih = mobil[Integer.parseInt(pilihMobil)-1].getMerekMobil();
+	 			System.out.println("Harga sewa mobil " + mobil[Integer.parseInt(pilihMobil)-1].getMerekMobil() +" untuk " + durasiSewa + " hari adalah Rp." + akumulasiHarga);
 	 			System.out.println("Yakin ingin menyewa mobil yang sudah anda pilih?");
 	 			System.out.println("1. Ya");
 	 			System.out.println("2. Tidak");
 	 			System.out.println("3. Keluar");
 	 			System.out.print("Pilih : ");
-	 			yakinSewa2 = masukan.nextInt();
-	 			if(yakinSewa2==1){
+	 			yakinSewa2 = masukan.next();
+	 			while(cekAngka(yakinSewa2)) {
+	 				System.out.println("Masukan harus berupa angka positif!");
+	 				System.out.print("Pilih : ");
+		 			yakinSewa2 = masukan.next();
+	 			}
+	 			while(!Pattern.compile("^[1-3]$").matcher(yakinSewa2).matches()) {
+	 				System.out.println("Maaf menu tidak tersedia, mohon pilih menu yang tersedia");
+	 				System.out.print("Pilih : ");
+		 			yakinSewa2 = masukan.next();
+	 			}
+	 			if(yakinSewa2.equals("1")){
 	 				System.out.print("Masukan uang anda : ");
-	 				uang = masukan.nextInt();
+	 				uang = masukan.next();
+	 				while(cekAngka(uang)) {
+	 					System.out.println("Masukan harus berupa angka positif");
+	 					System.out.print("Masukan uang anda : ");
+		 				uang = masukan.next();
+	 				}
 	 				kodeTf = noKtp.substring(0,noKtp.length()/2) + noHp.substring(noHp.length()/2,noHp.length());
 
 	 				try{
@@ -164,8 +249,9 @@ try{
 							tambahPenyewa.setString(4, noHp);
 							int result = tambahPenyewa.executeUpdate();
 
-	 				}catch(SQLException e){
-	 					e.printStackTrace();
+	 				}catch(SQLIntegrityConstraintViolationException e){
+	 					System.out.println("Data anda sudah terdaftar sebagai penyewa");
+	 					break;
 	 				}
 
 
@@ -175,22 +261,22 @@ try{
 							tambahTransaksi.setString(2,nama);
 							tambahTransaksi.setString(3, noKtp);
 							tambahTransaksi.setString(4, "Mobil " + mobilDipilih);
-							tambahTransaksi.setInt(5, durasiSewa);
+							tambahTransaksi.setInt(5, Integer.parseInt(durasiSewa));
 							tambahTransaksi.setInt(6, akumulasiHarga);
 
-							DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+							DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 							Date fd = formatter.parse(tanggal);
 							java.sql.Date sqlDate = new java.sql.Date(fd.getTime());
 							tambahTransaksi.setDate(7, sqlDate);
 
 							int result = tambahTransaksi.executeUpdate();
 
-	 				}catch(Exception e){
-	 					e.printStackTrace();
+	 				}catch(SQLIntegrityConstraintViolationException e){
+	 					System.out.println("Data anda sudah terdaftar sebagai penyewa");
 	 				}
 
 
-	 				if(uang>=akumulasiHarga){
+	 				if(Integer.parseInt(uang)>=akumulasiHarga){
 	 					System.out.println("Transaksi anda berhasil");
 	 					System.out.println("Detail transaksi : ");
 	 					System.out.println("Kode Transaksi : " + kodeTf);
@@ -200,8 +286,8 @@ try{
 	 					System.out.println("Nomor Handphone Penywa : " + noHp);
 	 					System.out.println("Durasi Sewa : " + durasiSewa + " Hari");
 	 					System.out.println("Total harga : Rp." + akumulasiHarga);
-	 					System.out.println("Uang yang dibayarkan : Rp."+ uang);
-	 					System.out.println("Kembalian uang anda : Rp." + (uang - akumulasiHarga));
+	 					System.out.println("Uang yang dibayarkan : Rp."+ Integer.parseInt(uang));
+	 					System.out.println("Kembalian uang anda : Rp." + (Integer.parseInt(uang) - akumulasiHarga));
 	 					cekHome=false;
 	 				}else{
 	 					System.out.println("Maaf uang anda tidak cukup untuk membayar harga sewa, silahkan membayar lagi nanti dengan Kode Transaksi anda : " + kodeTf);
@@ -209,12 +295,12 @@ try{
 	 				}
 
 
-	 			} else if(yakinSewa2==2){
+	 			} else if(yakinSewa2.equals("2")){
 	 				System.out.println();
 	 			System.out.println("Sewa dibatalkan");
 	 			System.out.println();
 
-	 		} else if(yakinSewa2==3){
+	 		} else if(yakinSewa2.equals("3")){
 	 			System.out.println("Terima kasih telah menggunakan apilikasi Sewa Kendaraan ini.");
 	 			cekHome=false;
 
@@ -222,17 +308,17 @@ try{
 
 
 	 		}
-	 		else if(yakinSewa==2){
+	 		else if(yakinSewa.equals("2")){
 	 			System.out.println();
 	 			System.out.println("Sewa dibatalkan");
 	 			System.out.println();
-	 		} else if(yakinSewa==3){
+	 		} else if(yakinSewa.equals("3")){
 	 			System.out.println("Terima kasih telah menggunakan apilikasi Sewa Kendaraan ini.");
 	 			cekHome=false;
 
 	 		}
 
-	 	}else if(pilihanSewa==2){
+	 	}else if(pilihanSewa.equals("2")){
 	 		System.out.println("Pilih jenis Motor yang ingin anda sewa");
 	 		for(int i=0; i<motor.length; i++){
 	 			System.out.println(i+1 + ". " + motor[i].getMerekMotor());
@@ -241,61 +327,124 @@ try{
 	 			System.out.println();
 	 		}
 	 		System.out.print("Pilih : ");
-	 		pilihMotor = masukan.nextInt();
+	 		pilihMotor = masukan.next();
+	 		
+	 		while(cekAngka(pilihMotor)) {
+	 			System.out.println("Masukan harus berupa angka positif!");
+	 			System.out.print("Pilih Motor : ");
+		 		pilihMotor = masukan.next();
+	 		}
+	 		while(!Pattern.compile("^[1-4]$").matcher(pilihMotor).matches()) {
+	 			System.out.println("Maaf jenis motor tidak tersedia");
+	 			System.out.print("Pilih Motor : ");
+		 		pilihMotor = masukan.next();
+	 		}
+	 		
 	 		System.out.println("Sewa motor yang dipilih?");
 	 		System.out.println("1. Ya");
 	 		System.out.println("2. Tidak");
 	 		System.out.println("3. Keluar");
 	 		System.out.print("Pilih : ");
-	 		yakinSewa = masukan.nextInt();
-	 		if(yakinSewa==1){
+	 		yakinSewa = masukan.next();
+	 		
+	 		while(cekAngka(yakinSewa)) {
+	 			System.out.println("Masukan harus berupa angka positif!");
+	 			System.out.print("Pilih : ");
+		 		yakinSewa = masukan.next();
+	 		}
+	 		while(!Pattern.compile("^[1-3]$").matcher(yakinSewa).matches()) {
+	 			System.out.println("Menu yang dipilih tidak tersedia, mohon pilih menu yang tersedia.");
+	 			System.out.print("Pilih : ");
+		 		yakinSewa = masukan.next();
+	 		}
+	 		
+	 		if(yakinSewa.equals("1")){
 	 			System.out.println("Masukan data diri anda");
 	 			System.out.print("Nama : ");
 	 			nama = masukan.nextLine();
 	 			nama = masukan.nextLine();
+	 			while(cekHuruf(nama)) {
+	 				System.out.println("Nama harus berupa huruf!");
+	 				System.out.println();
+	 				System.out.println("Masukan data diri anda");
+		 			System.out.print("Nama : ");
+		 			nama = masukan.nextLine();
+	 			}
 	 			System.out.print("Masukan nomor KTP : ");
 	 			noKtp = masukan.nextLine();
 	 			if(!noKtp.matches("(^\\d+${16})")){
 	 				System.out.println("Nomor KTP harus angka 16 digit");
+	 				System.out.println();
+	 				System.out.print("Masukan nomor KTP : ");
+	 				noKtp = masukan.nextLine();
+	 			}
+	 			while(!Pattern.compile("^\\d{16}$").matcher(noKtp).matches()) {
+	 				System.out.println("Nomor KTP harus angka 16 digit");
+	 				System.out.println();
 	 				System.out.print("Masukan nomor KTP : ");
 	 				noKtp = masukan.nextLine();
 	 			}
 	 			System.out.print("Masukan alamat anda : ");
 	 			alamat = masukan.nextLine();
+	 			while(cekHuruf(alamat)) {
+	 				System.out.println("Alamat harus berupa huruf");
+	 				System.out.println();
+	 				System.out.print("Masukan alamat anda : ");
+		 			alamat = masukan.nextLine();
+		 			
+	 			}
 	 			System.out.print("Masukan nomor handphone anda : ");
+	 			
 	 			noHp = masukan.nextLine();
-	 			if(!noHp.matches("(^\\d+${10,13})")){
+	 			while(!Pattern.compile("^\\d{10,13}$").matcher(noHp).matches()){
 	 				System.out.println("Nomor handphone harus angka 10-13 digit");
 	 				System.out.print("Masukan nomor handphone anda : ");
 	 				noHp = masukan.nextLine();
 	 			}
 	 			System.out.print("Masukan durasi (Hari) sewa yang anda inginkan : ");
-	 			durasiSewa = masukan.nextInt();
-	 			if(durasiSewa < 1 || !("" + durasiSewa).matches("(^\\d+$)")){
+	 			durasiSewa = masukan.next();
+	 			while(cekAngka(durasiSewa) || Integer.parseInt(durasiSewa)<1) {
+	 				System.out.println("Durasi harus berupa bilangan positif");
 	 				System.out.print("Masukan durasi (Hari) sewa yang anda inginkan : ");
-	 				durasiSewa = masukan.nextInt();
+		 			durasiSewa = masukan.next();
 	 			}
+	 			
 	 			System.out.print("Masukan tanggal sewa : ");
 	 			tanggal = masukan.next();
 	 			boolean cekFormatTgl = validateDate(tanggal);
-	 			if(cekFormatTgl == false){
+	 			while(cekFormatTgl == false){
 	 				System.out.print("Masukan tanggal sewa : ");
 	 				tanggal = masukan.next();
 	 				cekFormatTgl = validateDate(tanggal);
 	 			}
 	 			System.out.println();
-	 			akumulasiHarga = durasiSewa * motor[pilihMotor-1].getHarga();
-	 			motorDipilih = motor[pilihMotor-1].getMerekMotor();
-	 			System.out.println("Harga sewa motor " + motor[pilihMotor-1].getMerekMotor() + " untuk " + durasiSewa + " hari adalah Rp." + akumulasiHarga);
+	 			akumulasiHarga = Integer.parseInt(durasiSewa) * motor[Integer.parseInt(pilihMotor)-1].getHarga();
+	 			motorDipilih = motor[Integer.parseInt(pilihMotor)-1].getMerekMotor();
+	 			System.out.println("Harga sewa motor " + motor[Integer.parseInt(pilihMotor)-1].getMerekMotor() + " untuk " + durasiSewa + " hari adalah Rp." + akumulasiHarga);
 	 			System.out.println("Yakin ingin menyewa motor yang sudah anda pilih?");
 	 			System.out.println("1. Ya");
 	 			System.out.println("2. Tidak");
 	 			System.out.println("3. Keluar");
 	 			System.out.print("Pilih : ");
-	 			yakinSewa2 = masukan.nextInt();
-	 			if(yakinSewa2==1){
+	 			yakinSewa2 = masukan.next();
+	 			while(cekAngka(yakinSewa2)) {
+	 				System.out.println("Masukan harus berupa angka positif!");
+	 				System.out.print("Pilih : ");
+		 			yakinSewa2 = masukan.next();
+	 			}
+	 			while(!Pattern.compile("^[1-3]$").matcher(yakinSewa2).matches()) {
+	 				System.out.println("Maaf menu tidak tersedia, mohon pilih menu yang tersedia");
+	 				System.out.print("Pilih : ");
+		 			yakinSewa2 = masukan.next();
+	 			}
+	 			if(yakinSewa2.equals("1")){
 	 				System.out.print("Masukan uang anda : ");
-	 				uang = masukan.nextInt();
+	 				uang = masukan.next();
+	 				while(cekAngka(uang)) {
+	 					System.out.println("Masukan harus berupa angka positif");
+	 					System.out.print("Masukan uang anda : ");
+		 				uang = masukan.next();
+	 				}
 	 				kodeTf = noKtp.substring(0,noKtp.length()/2) + noHp.substring(noHp.length()/2,noHp.length());
 
 	 				try{
@@ -306,7 +455,7 @@ try{
 							tambahPenyewa.setString(4, noHp);
 							int result = tambahPenyewa.executeUpdate();
 
-	 				}catch(SQLException e){
+	 				}catch(SQLIntegrityConstraintViolationException e){
 	 					e.printStackTrace();
 	 				}
 
@@ -317,9 +466,9 @@ try{
 							tambahTransaksi.setString(2,nama);
 							tambahTransaksi.setString(3, noKtp);
 							tambahTransaksi.setString(4, "Motor " + motorDipilih);
-							tambahTransaksi.setInt(5, durasiSewa);
+							tambahTransaksi.setInt(5, Integer.parseInt(durasiSewa));
 							tambahTransaksi.setInt(6, akumulasiHarga);
-							DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+							DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 							Date fd = formatter.parse(tanggal);
 							java.sql.Date sqlDate = new java.sql.Date(fd.getTime());
 							tambahTransaksi.setDate(7, sqlDate);
@@ -330,7 +479,7 @@ try{
 	 				}
 
 
-	 				if(uang>=akumulasiHarga){
+	 				if(Integer.parseInt(uang)>=akumulasiHarga){
 	 					System.out.println("Transaksi anda berhasil");
 	 					System.out.println("Detail transaksi : ");
 	 					System.out.println("Kode Transaksi : " + kodeTf);
@@ -340,8 +489,8 @@ try{
 	 					System.out.println("Nomor Handphone Penywa : " + noHp);
 	 					System.out.println("Durasi Sewa : " + durasiSewa + " Hari");
 	 					System.out.println("Total harga : Rp." + akumulasiHarga);
-	 					System.out.println("Uang yang dibayarkan : Rp."+ uang);
-	 					System.out.println("Kembalian uang anda : Rp." + (uang - akumulasiHarga));
+	 					System.out.println("Uang yang dibayarkan : Rp."+ Integer.parseInt(uang));
+	 					System.out.println("Kembalian uang anda : Rp." + (Integer.parseInt(uang) - akumulasiHarga));
 	 					cekHome=false;
 	 				}else{
 	 					System.out.println("Maaf uang anda tidak cukup untuk membayar harga sewa, silahkan membayar lagi nanti dengan Kode Transaksi anda : " + kodeTf);
@@ -349,12 +498,12 @@ try{
 	 				}
 
 
-	 			} else if(yakinSewa2==2){
+	 			} else if(yakinSewa2.equals("2")){
 	 				System.out.println();
 	 			System.out.println("Sewa dibatalkan");
 	 			System.out.println();
 
-	 		} else if(yakinSewa2==3){
+	 		} else if(yakinSewa2.equals("3")){
 	 			System.out.println("Terima kasih telah menggunakan apilikasi Sewa Kendaraan ini.");
 	 			cekHome=false;
 
@@ -362,11 +511,11 @@ try{
 
 
 	 		}
-	 		else if(yakinSewa==2){
+	 		else if(yakinSewa.equals("2")){
 	 			System.out.println();
 	 			System.out.println("Sewa dibatalkan");
 	 			System.out.println();
-	 		} else if(yakinSewa==3){
+	 		} else if(yakinSewa.equals("3")){
 	 			System.out.println("Terima kasih telah menggunakan apilikasi Sewa Kendaraan ini.");
 	 			cekHome=false;
 
@@ -379,22 +528,31 @@ try{
 	 }
 	 //pengembalian
 
-	 else if(pilihan1==2){
+	 else if(pilihan1.equals("2")){
 	 	System.out.print("Masukan kode transaksi anda : ");
 	 	inputTf = masukan.next();
+	 	while(!Pattern.compile("^[a-zA-Z0-9]+$").matcher(inputTf).matches()) {
+	 		System.out.println("Kode transaksi tidak boleh mengandung simbol!");
+	 		System.out.print("Masukan kode transaksi anda : ");
+		 	inputTf = masukan.next();
+	 	}
 	 	System.out.print("Masukan tanggal pengembalian : ");
 	 	stglAkhir = masukan.next();
+	 	boolean cekFormatTgl = validateDate(stglAkhir);
+			while(cekFormatTgl == false){
+				System.out.print("Masukan tanggal sewa : ");
+				tanggal = masukan.next();
+				cekFormatTgl = validateDate(tanggal);
+			}
 	 	try{
 	 	PreparedStatement stmt = connection.prepareStatement("select * from transaksi where kodeTf= '"+inputTf+"'");  
 		ResultSet rs = stmt.executeQuery();
 		DatabaseMetaData md = connection.getMetaData();
 		ResultSet rs2 = md.getColumns(null, null, "transaksi", "kodeTf");
-	if (rs2.next()) {
-      //Column in table exist
-		System.out.println("Maaf transaksi yang anda cari tidak ada atau mungkin anda belum menyewa kendaraan kami.");
-    	}else{
-    	}
+	
+	int n =0;
 		  while(rs.next()){
+			  n++;
 		  	System.out.println();
 		  	System.out.println("=====Detail transaksi=====");
 			System.out.println("Kode Transaksi : "+rs.getString(1));
@@ -405,8 +563,8 @@ try{
 			hasilDurasi = rs.getInt(5);
 			System.out.println("Harga Sewa : " +rs.getInt(6));
 			System.out.println("Tanggal Sewa : "+ rs.getDate(7));
-			System.out.println("Tanggal Sewa : "+ stglAkhir);
-
+			System.out.println("Tanggal Pengembalian : "+ stglAkhir);
+			
 			Date date = rs.getDate(7);  
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
             stglAwal = dateFormat.format(date); 
@@ -435,26 +593,42 @@ try{
             	System.out.println("Denda yang harus dibayarkan : Rp." + denda*(Integer.parseInt(hasil)-hasilDurasi));
             	totalDenda = denda*(Integer.parseInt(hasil)-hasilDurasi);
             	System.out.print("Masukan uang untuk membayar denda : ");
-            	bayarDenda = masukan.nextInt();
-            	while(bayarDenda<totalDenda){
+            	bayarDenda = masukan.next();
+            	while(cekAngka(bayarDenda)) {
+            		System.out.println("Masukan harus berupa angka positif");
+            		System.out.print("Masukan uang untuk membayar denda : ");
+                	bayarDenda = masukan.next();
+            	}
+            	while(Integer.parseInt(bayarDenda)<totalDenda){
             		System.out.println("Jangan kabur, uang yang dimasukan tidak cukup, bayar dendanya dulu!!!");
             		System.out.print("Masukan uang untuk membayar denda : ");
-            		bayarDenda = masukan.nextInt();
-            		if(bayarDenda>=totalDenda){
+            		bayarDenda = masukan.next();
+            		while(cekAngka(bayarDenda)) {
+                		System.out.println("Masukan harus berupa angka positif");
+                		System.out.print("Masukan uang untuk membayar denda : ");
+                    	bayarDenda = masukan.next();
+                	}
+            		if(Integer.parseInt(bayarDenda)>=totalDenda){
             			System.out.println("Denda sudah dibayar");
             		}
             	}
-
+            
             }
 
 
 			System.out.println("=====Terima Kasih Telah Mengembalikan Kendaraan=====");  
 			
 			}
+		  if(n==0) {
+			  System.out.println("Maaf transaksi yang anda cari tidak ada atau mungkin anda belum menyewa kendaraan kami.");
+		  }
 			System.exit(0);
-		}catch(Exception e){
-			e.printStackTrace();
+		}catch(SQLException e){
+			
 	 	}
+	 }
+	 else {
+		 System.out.println("Maaf menu "+ pilihan1 + " tidak tersedia, silahkan masukan menu yang tersedia."); 
 	 }
 	
 }
@@ -463,6 +637,22 @@ try{
 	}
 
 
+	public static boolean cekAngka(String str) {
+		boolean cek = false;
+		if(!Pattern.compile("^[0-9]+$").matcher(str).matches()) {
+			cek =true;
+		}
+		return cek;
+	}
+	
+	public static boolean cekHuruf(String str) {
+		boolean cek = false;
+		if(!Pattern.compile("^[a-zA-Z\\s]+$").matcher(str).matches()) {
+			cek =true;
+		}
+		return cek;
+	}
+	
 private static long daysBetween(Calendar tanggalAwal, Calendar tanggalAkhir) {
         long lama = 0;
         Calendar tanggal = (Calendar) tanggalAwal.clone();
