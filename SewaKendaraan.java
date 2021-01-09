@@ -137,7 +137,6 @@ try{
 	 		System.out.println("Sewa mobil yang dipilih?");
 	 		System.out.println("1. Ya");
 	 		System.out.println("2. Tidak");
-	 		System.out.println("3. Keluar");
 	 		System.out.print("Pilih : ");
 	 		yakinSewa = masukan.next();
 	 		while(cekAngka(yakinSewa)) {
@@ -145,7 +144,7 @@ try{
 	 			System.out.print("Pilih : ");
 		 		yakinSewa = masukan.next();
 	 		}
-	 		while(!Pattern.compile("^[1-3]$").matcher(yakinSewa).matches()) {
+	 		while(!Pattern.compile("^[1-2]$").matcher(yakinSewa).matches()) {
 	 			System.out.println("Menu yang dipilih tidak tersedia, mohon pilih menu yang tersedia.");
 	 			System.out.print("Pilih : ");
 		 		yakinSewa = masukan.next();
@@ -218,7 +217,7 @@ try{
 	 			System.out.println("Yakin ingin menyewa mobil yang sudah anda pilih?");
 	 			System.out.println("1. Ya");
 	 			System.out.println("2. Tidak");
-	 			System.out.println("3. Keluar");
+	 		
 	 			System.out.print("Pilih : ");
 	 			yakinSewa2 = masukan.next();
 	 			while(cekAngka(yakinSewa2)) {
@@ -226,7 +225,7 @@ try{
 	 				System.out.print("Pilih : ");
 		 			yakinSewa2 = masukan.next();
 	 			}
-	 			while(!Pattern.compile("^[1-3]$").matcher(yakinSewa2).matches()) {
+	 			while(!Pattern.compile("^[1-2]$").matcher(yakinSewa2).matches()) {
 	 				System.out.println("Maaf menu tidak tersedia, mohon pilih menu yang tersedia");
 	 				System.out.print("Pilih : ");
 		 			yakinSewa2 = masukan.next();
@@ -290,7 +289,7 @@ try{
 	 					System.out.println("Kembalian uang anda : Rp." + (Integer.parseInt(uang) - akumulasiHarga));
 	 					cekHome=false;
 	 				}else{
-	 					System.out.println("Maaf uang anda tidak cukup untuk membayar harga sewa, silahkan membayar lagi nanti dengan Kode Transaksi anda : " + kodeTf);
+	 					System.out.println("Maaf uang anda tidak cukup untuk membayar harga sewa");
 	 					cekHome=false;
 	 				}
 
@@ -299,10 +298,26 @@ try{
 	 				System.out.println();
 	 			System.out.println("Sewa dibatalkan");
 	 			System.out.println();
-
-	 		} else if(yakinSewa2.equals("3")){
-	 			System.out.println("Terima kasih telah menggunakan apilikasi Sewa Kendaraan ini.");
-	 			cekHome=false;
+	 			System.out.println("Ingin keluar dari program?");
+	 			System.out.println("1. Ya");
+	 			System.out.println("2. Tidak");
+	 			System.out.print("Pilih : ");
+	 			String pilKel = masukan.next();
+	 			while(cekAngka(yakinSewa2)) {
+	 				System.out.println("Masukan harus berupa angka positif!");
+	 				System.out.print("Pilih : ");
+		 			yakinSewa2 = masukan.next();
+	 			}
+	 			while(!Pattern.compile("^[1-2]$").matcher(yakinSewa2).matches()) {
+	 				System.out.println("Maaf menu tidak tersedia, mohon pilih menu yang tersedia");
+	 				System.out.print("Pilih : ");
+		 			yakinSewa2 = masukan.next();
+	 			}
+	 			if(pilKel.equals("1")) {
+	 				System.out.println("Terima kasih telah menggunakan apilikasi Sewa Kendaraan ini.");
+		 			cekHome=false;
+	 			}
+	 			
 
 	 		}
 
@@ -312,10 +327,6 @@ try{
 	 			System.out.println();
 	 			System.out.println("Sewa dibatalkan");
 	 			System.out.println();
-	 		} else if(yakinSewa.equals("3")){
-	 			System.out.println("Terima kasih telah menggunakan apilikasi Sewa Kendaraan ini.");
-	 			cekHome=false;
-
 	 		}
 
 	 	}else if(pilihanSewa.equals("2")){
@@ -343,7 +354,6 @@ try{
 	 		System.out.println("Sewa motor yang dipilih?");
 	 		System.out.println("1. Ya");
 	 		System.out.println("2. Tidak");
-	 		System.out.println("3. Keluar");
 	 		System.out.print("Pilih : ");
 	 		yakinSewa = masukan.next();
 	 		
@@ -352,7 +362,7 @@ try{
 	 			System.out.print("Pilih : ");
 		 		yakinSewa = masukan.next();
 	 		}
-	 		while(!Pattern.compile("^[1-3]$").matcher(yakinSewa).matches()) {
+	 		while(!Pattern.compile("^[1-2]$").matcher(yakinSewa).matches()) {
 	 			System.out.println("Menu yang dipilih tidak tersedia, mohon pilih menu yang tersedia.");
 	 			System.out.print("Pilih : ");
 		 		yakinSewa = masukan.next();
@@ -424,7 +434,6 @@ try{
 	 			System.out.println("Yakin ingin menyewa motor yang sudah anda pilih?");
 	 			System.out.println("1. Ya");
 	 			System.out.println("2. Tidak");
-	 			System.out.println("3. Keluar");
 	 			System.out.print("Pilih : ");
 	 			yakinSewa2 = masukan.next();
 	 			while(cekAngka(yakinSewa2)) {
@@ -493,7 +502,7 @@ try{
 	 					System.out.println("Kembalian uang anda : Rp." + (Integer.parseInt(uang) - akumulasiHarga));
 	 					cekHome=false;
 	 				}else{
-	 					System.out.println("Maaf uang anda tidak cukup untuk membayar harga sewa, silahkan membayar lagi nanti dengan Kode Transaksi anda : " + kodeTf);
+	 					System.out.println("Maaf uang anda tidak cukup untuk membayar harga sewa");
 	 					cekHome=false;
 	 				}
 
@@ -502,12 +511,27 @@ try{
 	 				System.out.println();
 	 			System.out.println("Sewa dibatalkan");
 	 			System.out.println();
+	 			System.out.println("Ingin keluar dari program?");
+	 			System.out.println("1. Ya");
+	 			System.out.println("2. Tidak");
+	 			System.out.print("Pilih : ");
+	 			String pilKel = masukan.next();
+	 			while(cekAngka(yakinSewa2)) {
+	 				System.out.println("Masukan harus berupa angka positif!");
+	 				System.out.print("Pilih : ");
+		 			yakinSewa2 = masukan.next();
+	 			}
+	 			while(!Pattern.compile("^[1-2]$").matcher(yakinSewa2).matches()) {
+	 				System.out.println("Maaf menu tidak tersedia, mohon pilih menu yang tersedia");
+	 				System.out.print("Pilih : ");
+		 			yakinSewa2 = masukan.next();
+	 			}
+	 			if(pilKel.equals("1")) {
+	 				System.out.println("Terima kasih telah menggunakan apilikasi Sewa Kendaraan ini.");
+		 			cekHome=false;
+	 			}
 
-	 		} else if(yakinSewa2.equals("3")){
-	 			System.out.println("Terima kasih telah menggunakan apilikasi Sewa Kendaraan ini.");
-	 			cekHome=false;
-
-	 		}
+	 		} 
 
 
 	 		}
@@ -515,11 +539,7 @@ try{
 	 			System.out.println();
 	 			System.out.println("Sewa dibatalkan");
 	 			System.out.println();
-	 		} else if(yakinSewa.equals("3")){
-	 			System.out.println("Terima kasih telah menggunakan apilikasi Sewa Kendaraan ini.");
-	 			cekHome=false;
-
-	 		}
+	 		} 
 
 	 	}
 
